@@ -12,6 +12,13 @@
 OUTER_RADIUS = 50;
 THICKNESS = 10;
 DEPTH = 2;
+BAR_LENGTH = 194;
+
+/* [STL element to export] */
+ARM_RIGHT = true;
+ARM_LEFT = true;
+MOUNTING = true;
+BAR = true;
 
 module arm() {
     difference() {
@@ -47,38 +54,68 @@ module arm() {
     }
 }
 
-if (0) {
-    arm();
-}
-
-if (0) {
-    rotate([180, 0, 0]) {
-        mirror([0, 0, 1]) {
-            arm();
-        }
-    }
-}
-
 module left_mounting() {
-difference() {
-    translate([-OUTER_RADIUS - 1, 0, -2]) {
-        cube([THICKNESS, THICKNESS, 100]);
-    }
-    arm();
-    translate([-OUTER_RADIUS + 2, - 1, 20]) {
-        cube([THICKNESS, THICKNESS + 2, THICKNESS]);
-        translate([0, THICKNESS/2 + 3/4, THICKNESS/2]) {
-        rotate([0, 90, 0]) {
-            cylinder(THICKNESS, 3, 3, center=true, $fn=200);
+    difference() {
+        translate([-OUTER_RADIUS - 1, 0, -4]) {
+            cube([THICKNESS, THICKNESS, 102]);
         }
+        arm();
+        
+        translate([-OUTER_RADIUS - 1, 0, 0]) {
+            translate([1, 0, -0.5]) {
+                cube([THICKNESS, THICKNESS, 0.5]);
+            }
+        }
+
+        translate([-OUTER_RADIUS + 2, - 1, 20]) {
+            cube([THICKNESS, THICKNESS + 2, THICKNESS]);
+            translate([-1, THICKNESS, -1]) {
+                cube([THICKNESS, 2, THICKNESS + 2]);
+            }
+            translate([THICKNESS - 4, 0, -1]) {
+                cube([1, THICKNESS, THICKNESS + 2]);
+            }
+            translate([THICKNESS - 6, 0, -1]) {
+                cube([1, THICKNESS, THICKNESS + 2]);
+            }
+            translate([0, THICKNESS/2 + 3/4, THICKNESS/2]) {
+                rotate([0, 90, 0]) {
+                    cylinder(THICKNESS, 3, 3, center=true, $fn=200);
+                }
+            }
         }
     }
-}
 }
 
-left_mounting();
-translate([0,0,196]) {
-mirror([0, 0, 1]) {
-    left_mounting() ;
+if (ARM_RIGHT) {
+    arm();
 }
+
+if (ARM_LEFT) {
+    translate([0,0,196]) {
+        rotate([0, 0, 0]) {
+            mirror([0, 0, 1]) {
+                arm();
+            }
+        }
+    }
+}
+
+if (MOUNTING) {
+    left_mounting();
+    translate([0,0,196]) {
+        mirror([0, 0, 1]) {
+            left_mounting();
+        }
+    }
+}
+
+if (BAR) {
+    rotate([0, 0, -7]) {
+        translate([OUTER_RADIUS - THICKNESS/2,0, BAR_LENGTH/2 + DEPTH - 1]) {
+            translate([0,0, 0]) {
+                cylinder(BAR_LENGTH, 4, 4, center=true, $fn=200);
+            }
+        }
+    }
 }
