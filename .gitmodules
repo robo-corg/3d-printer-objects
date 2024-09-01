@@ -4,3 +4,6 @@
 [submodule "BOSL2"]
 	path = BOSL2
 	url = https://github.com/BelfrySCAD/BOSL2.git
+[submodule "RJ45KeystoneReceiver"]
+	path = RJ45KeystoneReceiver
+	url = https://github.com/marcuswu/RJ45KeystoneReceiver.git
