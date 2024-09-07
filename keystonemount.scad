@@ -1,10 +1,10 @@
 SLOP = 0.01;
 $fn = 60;
-KEYSTONE_FACE_WIDTH = 16.12;
-KEYSTONE_FACE_HEIGHT = 14.70;
+KEYSTONE_FACE_WIDTH = 17;
+KEYSTONE_FACE_HEIGHT = 15;
 KEYSTONE_FACE_DEPTH = 9.9;
-KEYSTONE_CLIP_WIDTH = 19.50;
-KEYSTONE_CLIP_HEIGHT = 17.24;
+KEYSTONE_CLIP_WIDTH = 21;
+KEYSTONE_CLIP_HEIGHT = 18;
 KEYSTONE_CLIP_DEPTH = 11.75;
 KEYSTONE_JACKET_WIDTH = KEYSTONE_CLIP_WIDTH + 4;
 KEYSTONE_JACKET_HEIGHT = KEYSTONE_CLIP_HEIGHT + 4;
@@ -44,7 +44,7 @@ module mount() {
     translate([0, 0, KEYSTONE_FACE_DEPTH/2 - MOUNT_DEPTH/2])
     difference() {
         intersection() {
-            translate([-50, KEYSTONE_JACKET_HEIGHT/2, -50])
+            translate([KEYSTONE_JACKET_WIDTH/2, -50, -50])
             cube([
                 100,
                 100,
@@ -52,26 +52,25 @@ module mount() {
                 ]
             );
             hull() {
-                translate([KEYSTONE_JACKET_WIDTH/2 - 4, KEYSTONE_JACKET_HEIGHT/2, 0])
+                translate([KEYSTONE_JACKET_WIDTH/2, KEYSTONE_JACKET_HEIGHT/2 - 4, 0])
                 cylinder(h=MOUNT_DEPTH, r=4, center=true);
 
-                translate([-KEYSTONE_JACKET_WIDTH/2 + 4, KEYSTONE_JACKET_HEIGHT/2, 0])
+                translate([KEYSTONE_JACKET_WIDTH/2, -KEYSTONE_JACKET_HEIGHT/2 + 4, 0])
                 cylinder(h=MOUNT_DEPTH, r=4, center=true);
 
-
-                translate([KEYSTONE_JACKET_WIDTH/2 - 8, KEYSTONE_JACKET_HEIGHT/2 + 8, 0])
+                translate([KEYSTONE_JACKET_WIDTH/2 + 8, KEYSTONE_JACKET_HEIGHT/2 - 8, 0])
                 cylinder(h=MOUNT_DEPTH, r=4, center=true);
 
-                translate([-KEYSTONE_JACKET_WIDTH/2 + 8, KEYSTONE_JACKET_HEIGHT/2 + 8, 0])
+                translate([KEYSTONE_JACKET_WIDTH/2 + 8, -KEYSTONE_JACKET_HEIGHT/2 + 8, 0])
                 cylinder(h=MOUNT_DEPTH, r=4, center=true);
             }
         }
 
-        translate([0, KEYSTONE_JACKET_HEIGHT/2 + 6, 0])
+        translate([KEYSTONE_JACKET_WIDTH/2  + 6, 0, 0])
         cylinder(h=MOUNT_DEPTH + 8, d=MOUNT_BOLT_DIAMETER, center=true);
     }
 }
 
 mount();
-mirror([0, 1, 0])
+mirror([1, 0, 0])
 mount();
