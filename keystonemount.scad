@@ -2,7 +2,7 @@ SLOP = 0.01;
 $fn = 60;
 KEYSTONE_FACE_WIDTH = 17;
 KEYSTONE_FACE_HEIGHT = 15;
-KEYSTONE_FACE_DEPTH = 9.9;
+KEYSTONE_FACE_DEPTH = 9.3;
 KEYSTONE_CLIP_WIDTH = 21;
 KEYSTONE_CLIP_HEIGHT = 18;
 KEYSTONE_CLIP_DEPTH = 11.75;
@@ -37,7 +37,25 @@ difference() {
         ],
         center=true
     );
+
+    hull() {
+        translate([0, 0, 0])
+        cube([
+            KEYSTONE_FACE_WIDTH,
+            KEYSTONE_FACE_HEIGHT,
+            2
+        ], center=true);
+
+        translate([0, 0, -5])
+        cube([
+            KEYSTONE_CLIP_WIDTH,
+            KEYSTONE_FACE_HEIGHT,
+            2
+        ], center=true);
+    }
 }
+
+
 
 
 module mount() {
