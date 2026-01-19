@@ -9,3 +9,13 @@ difference() {
         cube([FEEDER_WIDTH - 20, FEEDER_DEPTH - 20, FEEDER_HEIGHT - 10]);
     }
 }
+
+// Bin 1 Zone
+%translate([10, 10, 10.01]) {
+    cube([(FEEDER_WIDTH - 20)/2, FEEDER_DEPTH - 20, FEEDER_HEIGHT - 10]);
+}
+
+// Bin 2 Zone
+%translate([(FEEDER_WIDTH - 20)/2 + 10, 10, 10.01]) {
+    cube([(FEEDER_WIDTH - 20)/2, FEEDER_DEPTH - 20, FEEDER_HEIGHT - 10]);
+}
