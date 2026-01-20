@@ -22,7 +22,7 @@ BIN_ZONE_WIDTH = (FEEDER_WIDTH - 2*WALL_THICKNESS) / 2;
 BIN_ZONE_DEPTH = FEEDER_DEPTH - 2*WALL_THICKNESS;
 BIN_ZONE_HEIGHT = FEEDER_HEIGHT - WALL_THICKNESS;
 
-// Export mode: "assembly", "trough_only", "bin1_only", "bin2_only"
+// Export mode: "assembly", "trough_only", "bin1_only", "bin2_only", "holder_arm"
 EXPORT_MODE = "assembly";
 
 
@@ -97,6 +97,30 @@ module clip_tab() {
     }
 }
 
+module holder_arm() {
+    %color("ForestGreen", 0.9)
+    translate([FEEDER_WIDTH/2 - 5, 0, FEEDER_HEIGHT]) {
+        difference() {
+            cube([10, FEEDER_DEPTH, 3]);
+            // M3 bolt hole
+            translate([5, WALL_THICKNESS/2, -0.5]) {
+                cylinder(4, 1.5, 1.5, $fn = 100);
+            }
+            translate([5, FEEDER_DEPTH - WALL_THICKNESS/2, -0.5]) {
+                cylinder(4, 1.5, 1.5, $fn = 100);
+            }
+        }
+    }
+}
+
+module nut_trap_m3() {
+    cylinder(4, 1.5, 1.5, $fn = 100);
+    cube([5.42, 6.02, 2.3], center=true);
+    translate([0, -4, 0]) {
+        cube([5.42, 6.02, 2.3], center=true);
+    }
+}
+
 module bin() {
     difference() {
         // Outer shell with rounded bottom corners
@@ -104,21 +128,21 @@ module bin() {
             // Main body
             cube([BIN_ZONE_WIDTH - BIN_CLEARANCE, BIN_ZONE_DEPTH - BIN_CLEARANCE, BIN_ZONE_HEIGHT]);
 
-            // Clip tabs - left side
-            translate([-CLIP_PROTRUSION, 10, BIN_ZONE_HEIGHT - CLIP_HEIGHT - 5]) {
-                clip_tab();
-            }
-            translate([-CLIP_PROTRUSION, BIN_ZONE_DEPTH - BIN_CLEARANCE - 10 - CLIP_WIDTH, BIN_ZONE_HEIGHT - CLIP_HEIGHT - 5]) {
-                clip_tab();
-            }
+            // // Clip tabs - left side
+            // translate([-CLIP_PROTRUSION, 10, BIN_ZONE_HEIGHT - CLIP_HEIGHT - 5]) {
+            //     clip_tab();
+            // }
+            // translate([-CLIP_PROTRUSION, BIN_ZONE_DEPTH - BIN_CLEARANCE - 10 - CLIP_WIDTH, BIN_ZONE_HEIGHT - CLIP_HEIGHT - 5]) {
+            //     clip_tab();
+            // }
 
-            // Clip tabs - right side
-            translate([BIN_ZONE_WIDTH - BIN_CLEARANCE, 10, BIN_ZONE_HEIGHT - CLIP_HEIGHT - 5]) {
-                clip_tab();
-            }
-            translate([BIN_ZONE_WIDTH - BIN_CLEARANCE, BIN_ZONE_DEPTH - BIN_CLEARANCE - 10 - CLIP_WIDTH, BIN_ZONE_HEIGHT - CLIP_HEIGHT - 5]) {
-                clip_tab();
-            }
+            // // Clip tabs - right side
+            // translate([BIN_ZONE_WIDTH - BIN_CLEARANCE, 10, BIN_ZONE_HEIGHT - CLIP_HEIGHT - 5]) {
+            //     clip_tab();
+            // }
+            // translate([BIN_ZONE_WIDTH - BIN_CLEARANCE, BIN_ZONE_DEPTH - BIN_CLEARANCE - 10 - CLIP_WIDTH, BIN_ZONE_HEIGHT - CLIP_HEIGHT - 5]) {
+            //     clip_tab();
+            // }
         }
 
         // Interior cavity with rounded corners
@@ -134,18 +158,30 @@ module bin() {
 
 // Main assembly
 if (EXPORT_MODE == "assembly" || EXPORT_MODE == "trough_only") {
-    trough();
+    difference() {
+        trough();
+        translate([FEEDER_WIDTH/2, WALL_THICKNESS/2, FEEDER_HEIGHT-3]) {
+            nut_trap_m3();
+        }
+        translate([FEEDER_WIDTH/2, FEEDER_DEPTH - WALL_THICKNESS/2, FEEDER_HEIGHT-3]) {
+            mirror([0, 1, 0]) {
+                nut_trap_m3();
+            }
+        }
+    }
 }
+
+
 
 if (EXPORT_MODE == "assembly") {
     // Bin 1 (left)
-    color("SteelBlue", 0.7)
+    %color("SteelBlue", 0.7)
     translate([WALL_THICKNESS + BIN_CLEARANCE/2, WALL_THICKNESS + BIN_CLEARANCE/2, WALL_THICKNESS]) {
         bin();
     }
 
     // Bin 2 (right)
-    color("Coral", 0.7)
+    %color("Coral", 0.7)
     translate([WALL_THICKNESS + BIN_ZONE_WIDTH + BIN_CLEARANCE/2, WALL_THICKNESS + BIN_CLEARANCE/2, WALL_THICKNESS]) {
         bin();
     }
@@ -157,4 +193,8 @@ if (EXPORT_MODE == "bin1_only") {
 
 if (EXPORT_MODE == "bin2_only") {
     bin();
+}
+
+if (EXPORT_MODE == "assembly" || EXPORT_MODE == "holder_arm") {
+    holder_arm();
 }
