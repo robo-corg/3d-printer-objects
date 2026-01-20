@@ -160,10 +160,33 @@ module bin() {
 if (EXPORT_MODE == "assembly" || EXPORT_MODE == "trough_only") {
     difference() {
         trough();
+        // Holder arm nut traps (center front and back)
         translate([FEEDER_WIDTH/2, WALL_THICKNESS/2, FEEDER_HEIGHT-3]) {
             nut_trap_m3();
         }
         translate([FEEDER_WIDTH/2, FEEDER_DEPTH - WALL_THICKNESS/2, FEEDER_HEIGHT-3]) {
+            mirror([0, 1, 0]) {
+                nut_trap_m3();
+            }
+        }
+
+        // Corner nut traps for future add-ons
+        // Front-left corner
+        translate([WALL_THICKNESS/2, WALL_THICKNESS/2, FEEDER_HEIGHT-3]) {
+            nut_trap_m3();
+        }
+        // Front-right corner
+        translate([FEEDER_WIDTH - WALL_THICKNESS/2, WALL_THICKNESS/2, FEEDER_HEIGHT-3]) {
+            nut_trap_m3();
+        }
+        // Back-left corner
+        translate([WALL_THICKNESS/2, FEEDER_DEPTH - WALL_THICKNESS/2, FEEDER_HEIGHT-3]) {
+            mirror([0, 1, 0]) {
+                nut_trap_m3();
+            }
+        }
+        // Back-right corner
+        translate([FEEDER_WIDTH - WALL_THICKNESS/2, FEEDER_DEPTH - WALL_THICKNESS/2, FEEDER_HEIGHT-3]) {
             mirror([0, 1, 0]) {
                 nut_trap_m3();
             }
