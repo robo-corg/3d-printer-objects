@@ -98,7 +98,7 @@ module clip_tab() {
 }
 
 module holder_arm() {
-    %color("ForestGreen", 0.9)
+    color("ForestGreen")
     translate([FEEDER_WIDTH/2 - 5, 0, FEEDER_HEIGHT]) {
         difference() {
             cube([10, FEEDER_DEPTH, 3]);
@@ -108,6 +108,19 @@ module holder_arm() {
             }
             translate([5, FEEDER_DEPTH - WALL_THICKNESS/2, -0.5]) {
                 cylinder(4, 1.5, 1.5, $fn = 100);
+            }
+        }
+
+        arm_depth = FEEDER_DEPTH - 2*WALL_THICKNESS - 2*BIN_WALL - 4*BIN_CLEARANCE - 1;
+        channel_width = 2*BIN_WALL + 4*BIN_CLEARANCE;
+
+        // Channel to hold both bins in place
+        translate([0, WALL_THICKNESS + BIN_WALL + 2*BIN_CLEARANCE + 0.5, -3]) {
+            difference() {
+                cube([10, arm_depth, 6]);
+                translate([(10-channel_width)/2, -0.01, -0.5]) {
+                    cube([channel_width, arm_depth+0.02, 7]);
+                }
             }
         }
     }
@@ -191,6 +204,34 @@ if (EXPORT_MODE == "assembly" || EXPORT_MODE == "trough_only") {
                 nut_trap_m3();
             }
         }
+
+        // Bottom corner nut traps for mounting
+        // Bottom front-left corner
+        translate([WALL_THICKNESS/2, WALL_THICKNESS/2, 3]) {
+            mirror([0, 0, 1]) {
+                nut_trap_m3();
+            }
+        }
+        // Bottom front-right corner
+        translate([FEEDER_WIDTH - WALL_THICKNESS/2, WALL_THICKNESS/2, 3]) {
+            mirror([0, 0, 1]) {
+                nut_trap_m3();
+            }
+        }
+        // Bottom back-left corner
+        translate([WALL_THICKNESS/2, FEEDER_DEPTH - WALL_THICKNESS/2, 3]) {
+            mirror([0, 0, 1]) {
+                mirror([0, 1, 0])
+                nut_trap_m3();
+            }
+        }
+        // Bottom back-right corner
+        translate([FEEDER_WIDTH - WALL_THICKNESS/2, FEEDER_DEPTH - WALL_THICKNESS/2, 3]) {
+            mirror([0, 0, 1]) {
+                mirror([0, 1, 0])
+                nut_trap_m3();
+            }
+        }
     }
 }
 
@@ -198,13 +239,13 @@ if (EXPORT_MODE == "assembly" || EXPORT_MODE == "trough_only") {
 
 if (EXPORT_MODE == "assembly") {
     // Bin 1 (left)
-    %color("SteelBlue", 0.7)
+    color("SteelBlue", 0.7)
     translate([WALL_THICKNESS + BIN_CLEARANCE/2, WALL_THICKNESS + BIN_CLEARANCE/2, WALL_THICKNESS]) {
         bin();
     }
 
     // Bin 2 (right)
-    %color("Coral", 0.7)
+    color("Coral", 0.7)
     translate([WALL_THICKNESS + BIN_ZONE_WIDTH + BIN_CLEARANCE/2, WALL_THICKNESS + BIN_CLEARANCE/2, WALL_THICKNESS]) {
         bin();
     }
