@@ -2,13 +2,10 @@ include <BOSL2/std.scad>
 include <BOSL2/gears.scad>
 
 PITCH_RADIUS = pitch_radius(mod=2, teeth=20);
-
-spur_gear(mod=2, teeth=20, thickness=8, shaft_diam=5);
-
-
-translate([PITCH_RADIUS*2, 0, 0]) {
-    spur_gear(mod=2, teeth=20, thickness=8, shaft_diam=5, gear_spin=9);
-}
+SHAFT_DIAM = 5;
+SHAFT_HEIGHT = 10;  // Gap between spring and gears
+SPRING_R1 = SHAFT_DIAM/2;  // Inner radius matches shaft
+SPRING_R2 = 20;  // Outer radius
 
 // Create a spiral shape for a flat coil spring which will attach to the gear
 module flat_coil_spring(r1=5, r2=20, turns=3, width=2, thickness=0.5) {
@@ -17,4 +14,22 @@ module flat_coil_spring(r1=5, r2=20, turns=3, width=2, thickness=0.5) {
     path_sweep(strip_profile, spiral_path);
 }
 
-flat_coil_spring();
+// === Assembly ===
+
+// Drive shaft - connects spring to first gear
+cylinder(d=SHAFT_DIAM, h=SHAFT_HEIGHT + 8);  // Extends through gear
+
+// Flat coil spring at bottom (z=0)
+flat_coil_spring(r1=SPRING_R1, r2=SPRING_R2, turns=3, width=2, thickness=0.5);
+
+// Anchor post at outer end of spring
+translate([SPRING_R2, 0, -SHAFT_HEIGHT])
+    cylinder(d=SHAFT_DIAM, h=SHAFT_HEIGHT);
+
+// First gear (driven by spring) - elevated above spring
+translate([0, 0, SHAFT_HEIGHT])
+    spur_gear(mod=2, teeth=20, thickness=8, shaft_diam=SHAFT_DIAM);
+
+// Second gear (free-spinning) - also elevated
+translate([PITCH_RADIUS*2, 0, SHAFT_HEIGHT])
+    spur_gear(mod=2, teeth=20, thickness=8, shaft_diam=SHAFT_DIAM, gear_spin=9);
